@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "FiniteFunctions.h"
 #include <filesystem> //To check extensions in a nice way
+#include "FiniteFunctions.h"
+
 
 #include "gnuplot-iostream.h" //Needed to produce plots (not part of the course) 
 
@@ -13,14 +14,18 @@ FiniteFunction::FiniteFunction(){
   m_RMin = -5.0;
   m_RMax = 5.0;
   this->checkPath("DefaultFunction");
-  m_Integral = NULL;
+  //m_Integral = NULL;
+    m_Integral = 0.0;
+
 }
 
 //initialised constructor
 FiniteFunction::FiniteFunction(double range_min, double range_max, std::string outfile){
   m_RMin = range_min;
   m_RMax = range_max;
-  m_Integral = NULL;
+  //m_Integral = NULL;
+    m_Integral = 0.0;
+
   this->checkPath(outfile); //Use provided string to name output files
 }
 
@@ -70,7 +75,8 @@ double FiniteFunction::integral(int Ndiv) { //public
     std::cout << "Invalid number of divisions for integral, setting Ndiv to 1000" <<std::endl;
     Ndiv = 1000;
   }
-  if (m_Integral == NULL || Ndiv != m_IntDiv){
+  //if (m_Integral == NULL || Ndiv != m_IntDiv){
+  if (m_Integral == 0.0 || Ndiv != m_IntDiv){
     m_IntDiv = Ndiv;
     m_Integral = this->integrate(Ndiv);
     return m_Integral;
@@ -140,7 +146,8 @@ std::vector< std::pair<double,double> > FiniteFunction::scanFunction(int Nscan){
   double step = (m_RMax - m_RMin)/(double)Nscan;
   double x = m_RMin;
   //We use the integral to normalise the function points
-  if (m_Integral == NULL) {
+  //if (m_Integral == NULL) {
+  if (m_Integral == 0.0){
     std::cout << "Integral not set, doing it now" << std::endl;
     this->integral(Nscan);
     std::cout << "integral: " << m_Integral << ", calculated using " << Nscan << " divisions" << std::endl;

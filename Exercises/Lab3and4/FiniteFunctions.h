@@ -1,8 +1,11 @@
+#pragma once //Replacement for IFNDEF
 #include <string>
 #include <vector>
 #include "gnuplot-iostream.h"
+#include <iostream>
+#include <filesystem>
 
-#pragma once //Replacement for IFNDEF
+//#pragma once //Replacement for IFNDEF
 
 class FiniteFunction{
 
