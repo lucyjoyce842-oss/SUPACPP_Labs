@@ -1,3 +1,5 @@
+//Lucy Joyce 02/12/2025
+
 #include <iostream>
 #include <cmath>
 #include <fstream>
