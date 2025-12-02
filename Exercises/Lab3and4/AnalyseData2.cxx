@@ -4,47 +4,47 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <random>
 #include <filesystem>
 #include "FiniteFunctions.h"
 #include "CustomFunctions2.h"
 
-//make the title of each plot the mysterydataxxxx_plot
-//print mysterydataxxxx to terminal
-// is there a way to replace the mysterydataxxxx file in outputs each time rather than saving loads of them? maybe do this.
+int main() {
+    //Construct the function for each new class
+    Normal normal(3, 1.6, "Normal");
+    CL cl(1.5, 3, "CauchyLorentz");
+    CB cb(3, 1.5, 1.8, 2.4, "CrystalBall");
 
-int main(){
-    FiniteFunction f(-10,10,"myplot");
+    // Array of pointers to FiniteFunctions class
+    FiniteFunction* functions[] = { &normal, &cl, &cb };
 
-    OpenFile("Outputs/data",f,49);
-    f.integral(10000);
-    f.plotFunction();
-    //return 0;
+    //Loop through each new class
+    for (auto f : functions) {
+        //Print the range, integral, parameters, and function name
+        f->printInfo();
 
-    //std::cout<< filename <<std::endl;
+        //Open and plot mystery data
+        std::string baseName = OpenFile("Outputs/data", *f, 49);
+        f->setName(baseName + "_" + f->getName() + "_plot");
 
-    //Open the randomly generated data file
-    //std::string inputfile= "Outputs/data/MysteryData23120.txt";
-    //std::ifstream data_file;
-    //data_file.open(inputfile);
+        //Set number of samples for Metropolis-Hastings algorithm
+        const int Nsamples=10000;
+        //Set vector to store the sampled data
+        std::vector<double> samples;
 
-    //std::string line;
-    //while(std::getline(data_file,line)){
-        //std::cout<< line <<std::endl;
-    //}
+        //Metropolis-Hastings algorithm loop which stores the accepted values
+        for (int i=0; i<Nsamples; i++){
+            double xi=f->randomNumber();
+            samples.push_back(xi);
+        }
 
-    //std::vector<float> values;
-    //std::string line;
-    
-    //while(std::getline(data_file,line)){
-        //float val=std::stof(line);
-        //values.push_back(val);
-//}
+        //Plot the sampled data on the same plot as the mystery data and the function
+        f->plotData(samples, 50, false);
+        //Plot the function on the same plot as the mystery data
+        f->plotFunction();
 
-
-
-//for (size_t i = 0; i < values.size(); i++) {
-    //std::cout << values[i] << std::endl;
-//}
-
-
+        //Print a dashed line between the terminal output for each function
+        std::cout << "----------------------------------------\n";
+    }
+    return 0;
 }

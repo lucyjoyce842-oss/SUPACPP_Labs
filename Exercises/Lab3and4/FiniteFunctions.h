@@ -1,11 +1,9 @@
-#pragma once //Replacement for IFNDEF
+#pragma once
 #include <string>
 #include <vector>
 #include "gnuplot-iostream.h"
 #include <iostream>
 #include <filesystem>
-
-//#pragma once //Replacement for IFNDEF
 
 class FiniteFunction{
 
@@ -13,13 +11,20 @@ public:
   FiniteFunction(); //Empty constructor
   FiniteFunction(double range_min, double range_max, std::string outfile); //Variable constructor
   ~FiniteFunction(); //Destructor
-  double rangeMin(); //Low end of the range the function is defined within
-  double rangeMax(); //High end of the range the function is defined within
+
+  void setName(const std::string& newName);
+
+  double rangeMin() const; //Low end of the range the function is defined within
+  double rangeMax() const; //High end of the range the function is defined within
+  std::string getName() const;
   double integral(int Ndiv = 1000); 
   std::vector< std::pair<double,double> > scanFunction(int Nscan = 1000); //Scan over function to plot it (slight hack needed to plot function in gnuplot)
   void setRangeMin(double RMin);
   void setRangeMax(double RMax);
   void setOutfile(std::string outfile);
+
+  virtual double randomNumber();
+
   void plotFunction(); //Plot the function using scanFunction
   
   //Plot the supplied data points (either provided data or points sampled from function) as a histogram using NBins
@@ -42,9 +47,9 @@ protected:
   bool m_plotfunction = false; //Flag to determine whether to plot function
   bool m_plotdatapoints = false; //Flag to determine whether to plot input data
   bool m_plotsamplepoints = false; //Flag to determine whether to plot sampled data 
-  double integrate(int Ndiv);
+  virtual double integrate(int Ndiv);
   std::vector< std::pair<double, double> > makeHist(std::vector<double> &points, int Nbins); //Helper function to turn data points into histogram with Nbins
-  void checkPath(std::string outstring); //Helper function to ensure data and png paths are correct
+  void checkPath(const std::string& outfile); //Helper function to ensure data and png paths are correct
   void generatePlot(Gnuplot &gp); 
   
 private:

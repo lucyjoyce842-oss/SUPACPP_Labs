@@ -1,0 +1,9 @@
+This Submission should contain five files: AnalyseData2.cxx, FiniteFunctions.cxx, FiniteFunctions.h, CustomFunctions2.cxx, and CustomFunctions2.h.
+
+Before compling the code, ensure you are in the correct directory, which is 'Exercises/Lab3and4'.
+
+To complie the code run 'g++ -std=c++17 AnalyseData2.cxx CustomFunctions2.cxx FiniteFunctions.cxx -lboost_iostreams -lboost_system -lboost_filesystem -lstdc++fs -o AnalyseData2' in the terminal.
+
+To run the code type './AnalyseData2' in the terminal.
+
+The terminal output should be the function name, intergral, parameters, and range for the Normal, Cauchy-Lorentz, and Crystal Ball functions. Plots showing the mystery data, the function, and the data sampled from the distribution will be produced and can be viewed in the folder Lab3and4/Outputs/png.

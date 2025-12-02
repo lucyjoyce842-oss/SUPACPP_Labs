@@ -1,11 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <filesystem> //To check extensions in a nice way
+#include <filesystem>
 #include "FiniteFunctions.h"
-
-
-#include "gnuplot-iostream.h" //Needed to produce plots (not part of the course) 
+#include "gnuplot-iostream.h"
 
 using std::filesystem::path;
 
@@ -14,17 +12,14 @@ FiniteFunction::FiniteFunction(){
   m_RMin = -5.0;
   m_RMax = 5.0;
   this->checkPath("DefaultFunction");
-  //m_Integral = NULL;
     m_Integral = 0.0;
-
 }
 
 //initialised constructor
 FiniteFunction::FiniteFunction(double range_min, double range_max, std::string outfile){
   m_RMin = range_min;
   m_RMax = range_max;
-  //m_Integral = NULL;
-    m_Integral = 0.0;
+  m_Integral = 0.0;
 
   this->checkPath(outfile); //Use provided string to name output files
 }
@@ -32,8 +27,8 @@ FiniteFunction::FiniteFunction(double range_min, double range_max, std::string o
 //Plots are called in the destructor
 //SUPACPP note: They syntax of the plotting code is not part of the course
 FiniteFunction::~FiniteFunction(){
-  Gnuplot gp; //Set up gnuplot object
-  this->generatePlot(gp); //Generate the plot and save it to a png using "outfile" for naming 
+Gnuplot gp; //Set up gnuplot object
+this->generatePlot(gp); //Generate the plot and save it to a png using "outfile" for naming 
 }
 
 /*
@@ -50,8 +45,10 @@ void FiniteFunction::setOutfile(std::string Outfile) {this->checkPath(Outfile);}
 //Getters
 ###################
 */ 
-double FiniteFunction::rangeMin() {return m_RMin;};
-double FiniteFunction::rangeMax() {return m_RMax;};
+double FiniteFunction::rangeMin() const {return m_RMin;};
+double FiniteFunction::rangeMax() const {return m_RMax;};
+std::string FiniteFunction::getName() const { return m_FunctionName; };
+
 
 /*
 ###################
@@ -66,22 +63,20 @@ double FiniteFunction::callFunction(double x) {return this->invxsquared(x);}; //
 Integration by hand (output needed to normalise function when plotting)
 ###################
 */ 
-double FiniteFunction::integrate(int Ndiv){ //private
-  //ToDo write an integrator
-  return -99;  
+double FiniteFunction::integrate(int Ndiv){
+  return std::atan(m_RMax)-std::atan(m_RMin);
 }
-double FiniteFunction::integral(int Ndiv) { //public
+double FiniteFunction::integral(int Ndiv) {
   if (Ndiv <= 0){
     std::cout << "Invalid number of divisions for integral, setting Ndiv to 1000" <<std::endl;
     Ndiv = 1000;
   }
-  //if (m_Integral == NULL || Ndiv != m_IntDiv){
   if (m_Integral == 0.0 || Ndiv != m_IntDiv){
     m_IntDiv = Ndiv;
     m_Integral = this->integrate(Ndiv);
     return m_Integral;
   }
-  else return m_Integral; //Don't bother re-calculating integral if Ndiv is the same as the last call
+  else return m_Integral;
 }
 
 /*
@@ -90,9 +85,9 @@ double FiniteFunction::integral(int Ndiv) { //public
 ###################
 */
 // Generate paths from user defined stem
-void FiniteFunction::checkPath(std::string outfile){
- path fp = outfile;
- m_FunctionName = fp.stem(); 
+void FiniteFunction::checkPath(const std::string& outfile){
+ m_FunctionName = outfile;
+ //m_FunctionName = fp.stem(); 
  m_OutData = m_FunctionName+".data";
  m_OutPng = m_FunctionName+".png";
 }
@@ -103,6 +98,12 @@ void FiniteFunction::printInfo(){
   std::cout << "rangeMax: " << m_RMax << std::endl;
   std::cout << "integral: " << m_Integral << ", calculated using " << m_IntDiv << " divisions" << std::endl;
   std::cout << "function: " << m_FunctionName << std::endl;
+}
+
+//Random number generator I added to overwrite in the classes which inherit from FiniteFunctions
+double FiniteFunction::randomNumber() {
+    std::cerr << "Warning: randomNumber() not implemented for base FiniteFunction!" << std::endl;
+    return 0.0;
 }
 
 /*
@@ -169,7 +170,11 @@ std::vector< std::pair<double,double> > FiniteFunction::makeHist(std::vector<dou
   for (double point : points){
     //Get bin index (starting from 0) the point falls into using point value, range, and Nbins
     int bindex = static_cast<int>(floor((point-m_RMin)/((m_RMax-m_RMin)/(double)Nbins)));
-    bins[bindex]++; //weight of 1 for each data point
+    //bins[bindex]++; //weight of 1 for each data point
+    //int bindex = int((x - xmin) / binWidth);
+    if (bindex < 0) bindex = 0;
+    if (bindex >= Nbins) bindex = Nbins - 1;
+    bins[bindex]++;
     norm++; //Total number of data points
   }
   double binwidth = (m_RMax-m_RMin)/(double)Nbins;
@@ -238,4 +243,17 @@ void FiniteFunction::generatePlot(Gnuplot &gp){
     gp << "plot '-' with points ps 2 lc rgb 'blue' title 'sampled data'\n";
     gp.send1d(m_samples);
   }
+
+}
+ void FiniteFunction::setName(const std::string& newName)
+{
+    m_FunctionName = newName;
+
+    // Update output filenames consistently
+    m_OutData = m_FunctionName + ".dat";
+    m_OutPng  = m_FunctionName + ".png";
+
+    // Ensure folder paths are valid
+    checkPath(m_OutData);
+    checkPath(m_OutPng);
 }
