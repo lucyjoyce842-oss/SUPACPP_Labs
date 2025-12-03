@@ -1,3 +1,5 @@
+//Lucy Joyce 03/12/25
+
 #include "CustomFunctions2.h"
 #include "FiniteFunctions.h"
 #include <cmath>
