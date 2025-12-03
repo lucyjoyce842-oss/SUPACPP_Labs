@@ -2,7 +2,7 @@ This Submission should contain five files: AnalyseData2.cxx, FiniteFunctions.cxx
 
 Before compling the code, ensure you are in the correct directory, which is 'Exercises/Lab3and4'.
 
-To complie the code run 'g++ -std=c++17 AnalyseData2.cxx CustomFunctions2.cxx FiniteFunctions.cxx -lboost_iostreams -lboost_system -lboost_filesystem -lstdc++fs -o AnalyseData2' in the terminal.
+To complie the code run 'g++ -std=c++17 main.cxx Functions.cxx FiniteFunctions2.cxx -lboost_iostreams -lboost_system -lboost_filesystem -lstdc++fs -o AnalyseData2' in the terminal.
 
 To run the code type './AnalyseData2' in the terminal.
 
