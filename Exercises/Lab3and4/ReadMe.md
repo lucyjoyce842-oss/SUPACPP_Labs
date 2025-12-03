@@ -1,4 +1,4 @@
-This Submission should contain five files: AnalyseData2.cxx, FiniteFunctions.cxx, FiniteFunctions.h, CustomFunctions2.cxx, and CustomFunctions2.h.
+This Submission should contain five files along with this ReadMe file: AnalyseData2.cxx, FiniteFunctions.cxx, FiniteFunctions.h, CustomFunctions2.cxx, and CustomFunctions2.h.
 
 Before compling the code, ensure you are in the correct directory, which is 'Exercises/Lab3and4'.
 
